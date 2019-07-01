@@ -12,24 +12,24 @@ https://towardsdatascience.com/cyclegan-learning-to-translate-images-without-pai
 ![Overview](https://github.com/Sooram/CycleGAN-tensorflow/blob/master/imgs/overview.PNG)
 
 ## Loss function
-1. Adversarial Loss
+1. Adversarial Loss\
 ![Overview](https://github.com/Sooram/CycleGAN-tensorflow/blob/master/imgs/adversarial-loss.PNG)
 
-2. Cycle Consistency Loss
+2. Cycle Consistency Loss\
 ![Overview](https://github.com/Sooram/CycleGAN-tensorflow/blob/master/imgs/cycle-consistency-loss.PNG)
 "adversarial losses alone cannot guarantee that the learned function can map an individual input xi to a desired output yi. To further reduce the space of possible mapping functions, we argue that the learned mapping functions should be cycle-consistent
- for each image x from domain X, the image translation cycle should be able to bring x back to the original image, i.e., x → G(x) → F(G(x)) ≈ x."
+ for each image x from domain X, the image translation cycle should be able to bring x back to the original image, i.e., x → G(x) → F(G(x)) ≈ x."\
 ![Overview](https://github.com/Sooram/CycleGAN-tensorflow/blob/master/imgs/cycle-consistency-loss-img.PNG)
 
-3. Full Objective
+3. Full Objective\
 ![Overview](https://github.com/Sooram/CycleGAN-tensorflow/blob/master/imgs/full-objective.PNG)
 
 ## Network architecture
-1. Generator
+1. Generator\
 ![Overview](https://github.com/Sooram/CycleGAN-tensorflow/blob/master/imgs/generator.PNG)
 "This network contains two stride-2 convolutions, several residual blocks [18], and two fractionally strided convolutions with stride 1 2 . We use 6 blocks for 128 × 128 images and 9 blocks for 256 × 256 and higher resolution training images. Similar to Johnson et al. [23], we use instance normalization [53]."
 
-2. Discriminator
+2. Discriminator\
 ![Overview](https://github.com/Sooram/CycleGAN-tensorflow/blob/master/imgs/discriminator.PNG)
 "For the discriminator networks we use 70 × 70 PatchGANs [22, 30, 29], which aim to classify whether 70 × 70 overlapping image patches are real or fake."
 
