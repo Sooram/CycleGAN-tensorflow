@@ -25,6 +25,7 @@ https://towardsdatascience.com/cyclegan-learning-to-translate-images-without-pai
 ![Overview](https://github.com/Sooram/CycleGAN-tensorflow/blob/master/imgs/full-objective.PNG)
 
 ## Network architecture
+Pretty complicated and a lot of restrictions. I haven't implemented PatchGAN for the discriminator.\
 1. Generator\
 ![Overview](https://github.com/Sooram/CycleGAN-tensorflow/blob/master/imgs/generator.PNG)\
 "This network contains two stride-2 convolutions, several residual blocks [18], and two fractionally strided convolutions with stride 1 2 . We use 6 blocks for 128 × 128 images and 9 blocks for 256 × 256 and higher resolution training images. Similar to Johnson et al. [23], we use instance normalization [53]."
@@ -42,4 +43,4 @@ https://towardsdatascience.com/cyclegan-learning-to-translate-images-without-pai
 - learning rate: 0.0002 for the first 100 epochs and linearly decay the rate to zero over the next 100 epochs
 
 ## Results
-
+Will be updated soon.
