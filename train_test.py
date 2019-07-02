@@ -71,6 +71,7 @@ def train(args, model, sess):
     
     # load previous model
     model.load(sess, args.model_dir)  
+    
     pool = ImagePool(args.max_size)
 
     steps_per_epoch = (len(filenames[0])+len(filenames[1])) // (args.batch_size*2)        
@@ -84,47 +85,52 @@ def train(args, model, sess):
 
         for step in range(steps_per_epoch):
             x_batch = ld.get_random_batch(filenames, args.batch_size, img['w'])  
-#            x_batch = np.reshape(x_batch, [-1, img['w'], img['h'], img['c']])
-                                    
 
-            # Update G network and record fake outputs
-            fake_A, fake_B, g_loss, cyc_loss, _ = sess.run([model.fake_A, model.fake_B, 
-                                                            model.loss_g, model.loss_cyc, 
-                                                            model.g_train_op],
+            # update G_AtoB network and record fake outputs
+            fake_B, g_AtoB_loss, _ = sess.run([model.fake_B, model.loss_g_AtoB,  
+                                               model.g_A_trainer],
+                                 feed_dict={model.real_A: x_batch[:args.batch_size],
+                                            model.real_B: x_batch[args.batch_size:],
+                                            model.lr: curr_lr} )
+            
+            # update G_BtoA network and record fake outputs
+            fake_A, g_BtoA_loss, _ = sess.run([model.fake_A, model.loss_g_BtoA, 
+                                               model.g_B_trainer],
                                  feed_dict={model.real_A: x_batch[:args.batch_size],
                                             model.real_B: x_batch[args.batch_size:],
                                             model.lr: curr_lr})
-
+            
             [fake_A, fake_B] = pool([fake_A, fake_B])
             
-            
-            # Update D network
-            d_loss, _ = sess.run([model.loss_d, model.d_train_op], 
+            # update D_A network
+            d_A_loss, _ = sess.run([model.loss_d_A, model.d_A_trainer], 
                      feed_dict={model.real_A: x_batch[:args.batch_size],
-                                model.real_B: x_batch[args.batch_size:],
                                 model.fake_A_sample: fake_A,
+                                model.lr: curr_lr})
+            
+            # update D_B network
+            d_B_loss, _ = sess.run([model.loss_d_B, model.d_B_trainer], 
+                     feed_dict={model.real_B: x_batch[args.batch_size:],
                                 model.fake_B_sample: fake_B,
                                 model.lr: curr_lr})
-#            summary, global_step = sess.run([model.summary_op, model.global_step],
-#                                    feed_dict={model.x: x_batch})
-
+                                        
             if step % 100 == 0:
-                print('Epoch[{}/{}] Step[{}/{}] g_loss:{:.4f}, d_loss:{:.4f}, c_loss:{:.4f}'.format(epoch, args.epoch, step,
-                                                                                     steps_per_epoch, g_loss,
-                                                                                     d_loss, cyc_loss))
-#            summary_writer.add_summary(summary, global_step)
+                print('Epoch[{}/{}] Step[{}/{}] g_AtoB:{:.4f}, g_BtoA:{:.4f},\
+                d_A:{:.4f}, d_B:{:.4f}'.format(epoch, args.epoch, step, steps_per_epoch, 
+                                        g_AtoB_loss, g_BtoA_loss,
+                                        d_A_loss, d_B_loss))
 
         # visualize
-        vis_batch = ld.get_random_batch(filenames, 8, img['w'])
-        fake_A, fake_B = sess.run([model.fake_A, model.fake_B],
-                                 feed_dict={model.real_A: vis_batch[:args.batch_size],
-                                            model.real_B: vis_batch[args.batch_size:]})
+        fake_A, fake_B, global_step = sess.run([model.fake_A, model.fake_B, model.global_step],
+                                 feed_dict={model.real_A: x_batch[:args.batch_size],
+                                            model.real_B: x_batch[args.batch_size:]})
+        
         
         filepath = os.path.join(model.log_dir, str(epoch) + '.png')
         visualize(x_batch, fake_A, fake_B, filepath)
                    
         # save model
-        model.save(sess, args.model_dir, model.global_step)
+        model.save(sess, args.model_dir, global_step)
 
 
 def inference(args, model, sess):
@@ -171,7 +177,7 @@ def cyclic_inference(args, model, sess):
                                             model.real_B: x_batch[args.batch_size:]})
         
         fake_B_A_ = np.concatenate([fake_B, fake_A_], axis=0)   # made from A
-        fake_A_B_ = np.concatenate([fake_A, fake_B_], axis=0)      # made from B
+        fake_A_B_ = np.concatenate([fake_A, fake_B_], axis=0)   # made from B
 
         filepath = os.path.join(model.test_dir, str(i) + '.png')
         visualize(x_batch, fake_B_A_, fake_A_B_, filepath)
