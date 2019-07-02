@@ -149,8 +149,8 @@ def inference(args, model, sess):
         x_batch = ld.get_batch(filenames, batch_size, i, img['w'])  
         
         fake_A, fake_B = sess.run([model.fake_A, model.fake_B],
-                                 feed_dict={model.real_A: x_batch[:args.batch_size],
-                                            model.real_B: x_batch[args.batch_size:]})
+                                 feed_dict={model.real_A: x_batch[:batch_size],
+                                            model.real_B: x_batch[batch_size:]})
         
         filepath = os.path.join(model.test_dir, str(i) + '.png')
         visualize(x_batch, fake_A, fake_B, filepath)

@@ -73,6 +73,7 @@ def get_batch(filenames, batch_size, i, image_size):
     for label in range(len(filenames)):
         batch_names.append(filenames[label][i*batch_size:(i+1)*batch_size])
 
+    batch_names = [name for label_list in batch_names for name in label_list]
     # read in image files
     batch_images = []
     for filename in batch_names:
