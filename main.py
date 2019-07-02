@@ -21,11 +21,9 @@ parser.add_argument('--data_dir', type=str,
 parser.add_argument('--is_training', type=bool, default=True, help='whether it is training or inferecing')
 parser.add_argument('--batch_size', type=int, default=1, help='batch size per domain')
 parser.add_argument('--epoch', type=int, default=200, help='epochs')
-parser.add_argument('--start_epoch', type=int, default=93, help='epochs')
+parser.add_argument('--start_epoch', type=int, default=0, help='epochs')
 parser.add_argument('--max_size', type=int, default=50, help='number of images needed to update the descriminator')
 parser.add_argument('--d_lr', type=float, default=2e-4, help='learning rate for discriminator')
-#parser.add_argument('--g_lr', type=float, default=1e-3, help='learning rate for generator')
-
 
         
 #%%
