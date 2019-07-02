@@ -43,4 +43,5 @@ Pretty complicated and a lot of restrictions. I haven't implemented PatchGAN for
 - learning rate: 0.0002 for the first 100 epochs and linearly decay the rate to zero over the next 100 epochs
 
 ## Results
-Will be updated soon.
+![Overview](https://github.com/Sooram/CycleGAN-tensorflow/blob/master/4.PNG)\
+Tested with the test set after 91 epochs of training. It hasn't been trained completely(the paper suggests 200 epochs for training), so the result images are cracked(though I'm not sure if the images can be improved with more epochs of training or not).
